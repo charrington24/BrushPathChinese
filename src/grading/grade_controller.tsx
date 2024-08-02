@@ -1,5 +1,5 @@
 import grade_svg from './grade_svg';
-import interpolate from './interpolate';
+import {interpolate} from './interpolate';
 import color_input from './color_input';
 import { Heap } from 'heap-js';
 import KanjiGrade from '../types/KanjiGrade';
@@ -121,7 +121,10 @@ function choose_strokes(iCoords: number[][][], tCoords: number[][][]): [number[]
             }
         }
         const iCoordsCorrected = iCoords.filter((_, index) => assigned[index] !== -1);
+
         var [grades, strokeInfo, feedback, aspectString, failing, sOrder] = alternateStrokeOrder(JSON.parse(JSON.stringify(iCoordsCorrected)), tCoords, passing);
+ 
+
         if (failing > tCoords.length * 0.75) {
             kanji_grade.overallFeedback += "Review the model and try again.\n";
             return [[],[],[],"",0];
@@ -209,8 +212,11 @@ function alternateStrokeOrder(
     passing: number = 0.65,
     maxIters: number = 40
   ): [number[], string[], string[], string, number, number[]] {
+
+
     function calculateAverageGrade(order: number[]): [number, number] {
-        const [grades] = grade_svg(generateOrderArray(JSON.parse(JSON.stringify(iCoords)), order), tCoords, passing);
+
+        const [grades] = grade_svg(generateOrderArray(structuredClone(iCoords), order), tCoords, passing);
         return [grades.reduce((a, b) => a + b, 0) / grades.length, grades.filter(grade => grade < passing).length];
     }
 
@@ -258,14 +264,18 @@ function alternateStrokeOrder(
   
     // Initialize variables
     let bestCombo = Array.from({ length: iCoords.length }, (_, index) => index + 1);
-    let [grades] = grade_svg(iCoords, tCoords, passing);
+
+
+    let [grades] = grade_svg(structuredClone(iCoords), tCoords, passing);
     let failing = grades.filter(grade => grade < passing).length;
   
     // Perform BFS
     [bestCombo, failing] = bfs(bestCombo.slice());
 
+    
 
-    let res = grade_svg(generateOrderArray(iCoords, bestCombo), tCoords, passing);
+    let res = grade_svg(generateOrderArray((iCoords), bestCombo), tCoords, passing);
+
     let retVal = [res[0], res[1], res[2], res[3], failing, bestCombo] as [number[], string[], string[], string, number, number[]];
 
     return retVal;
@@ -285,17 +295,18 @@ export default function grade(input: string, targetKanji: string, passing: numbe
     return new Promise((resolve, reject) => {
         if(coords && totalLengths) {
             const data = {coords,totalLengths};
-
+            
             try {
                 var targetInfo = data as unknown as interp_data;
                 const tCoords = targetInfo.coords;
-                const iCoords = interpolate((' ' + input).slice(1), targetInfo.totalLengths);
+                const iCoords = (interpolate((' ' + input).slice(1), targetInfo.totalLengths));
+
                 if (!iCoords.length) return;
                 let grades: number[], strokeInfo: string[], feedback: string[], aspectString: string, failing: number, strokeOrder: number[]; // Declare the types of the variables separately
                 if (iCoords.length !== tCoords.length) {
                     [grades, strokeInfo, feedback, aspectString, failing] = choose_strokes(iCoords, tCoords);
                 } else {
-                    [grades, strokeInfo, feedback, aspectString, failing, strokeOrder] = alternateStrokeOrder(iCoords, tCoords, passing);
+                    [grades, strokeInfo, feedback, aspectString, failing, strokeOrder] = alternateStrokeOrder(structuredClone(iCoords), tCoords, passing);
                     if (failing > iCoords.length * 0.75) {
                         color_input([]);
                         kanji_grade = {
@@ -351,6 +362,7 @@ export default function grade(input: string, targetKanji: string, passing: numbe
                     var targetInfo = data as unknown as interp_data;
                     const tCoords = targetInfo.coords;
                     const iCoords = interpolate((' ' + input).slice(1), targetInfo.totalLengths);
+
                     if (!iCoords.length) return;
                     let grades: number[], strokeInfo: string[], feedback: string[], aspectString: string, failing: number, strokeOrder: number[]; // Declare the types of the variables separately
                     if (iCoords.length !== tCoords.length) {

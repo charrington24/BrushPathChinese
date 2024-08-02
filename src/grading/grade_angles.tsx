@@ -1,6 +1,7 @@
 import path_angles from './path_angles';
 
 export default function grade_angles(inputCoords: number[][][], targetCoords: number[][][]): [number[][], number[][], number[], number[]] {
+
     const [inputAngles, targetAngles, squiggle] = path_angles(inputCoords, targetCoords);
     const angleDiffs: number[][] = [];
     for (let i = 0; i < targetAngles.length; i++) {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "../styles/styles.css";
 import HomeStats from "../components/HomeStats";
 import HomeStudyPrompt from "../components/HomeStudyPrompt";
@@ -12,13 +12,14 @@ import Character from "../types/Character";
 import SingleWordView from "./SingleWord";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useDecks } from '../utils/DeckContext';
-import { getDecksFromRefs, getDeckFromID, getCharacterScoreData, getCharacterScoreCount } from "../utils/FirebaseQueries";
+import { getDecksFromRefs, getDeckFromID, getCharacterScoreData, getCharacterScoreCount, updateLanguageField } from "../utils/FirebaseQueries";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DocumentData } from "firebase/firestore";
 import { channel } from "diagnostics_channel";
 import { initializeApp } from "firebase/app";
-
+import runInterp from "../utils/interpolater";
+import DrawSandbox from "./DrawSandbox";
 
 
 type RetrievableData = {
@@ -48,6 +49,14 @@ const Home: React.FC = (props) => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    // const fetchChars = async () => {
+      
+    //     await updateLanguageField();
+        
+    //   } 
+    //   fetchChars();
+  }, []);
 
   useEffect(() => {
     // const fetchDecks = async () => {
@@ -89,6 +98,36 @@ const Home: React.FC = (props) => {
 
   }, [userData]);
 
+  const samplesvg =  `<svg version="1.1" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+
+<g transform="scale(1, -1) translate(0, -900)">
+  <path d="M 323 706 Q 325 699 328 694 Q 334 686 367 671 Q 474 619 574 561 Q 600 545 617 543 Q 627 545 631 559 Q 641 576 613 621 Q 575 684 334 717 Q 321 719 323 706 Z" class="stroke1"/>
+  <path d="M 312 541 Q 314 535 316 531 Q 320 524 347 512 Q 455 461 563 397 Q 588 380 606 380 Q 615 382 619 396 Q 629 414 602 457 Q 564 519 321 554 Q 320 555 319 555 Q 310 555 312 541 Z" class="stroke2"/>
+  <text x="336" y="704" style="transform-origin:336px 704px; transform:scale(1,-1);">1</text>
+  <text x="317" y="548" style="transform-origin:317px 548px; transform:scale(1,-1);">2</text></g>
+</svg>`
+
+const sample : Character = {
+    id: '0',
+    unicode: "⺀",
+    unicode_str: "⺀",
+    on: [],
+    kun: [],
+    nanori: [],
+    radicals: [],
+    english: ["ice"],
+    one_word_meaning: "",
+    stroke_count: 2,
+    freq: null,
+    grade: null,
+    jlpt: null,
+    compounds: undefined,
+    parts: [],
+    coords: [[[336,704],[450,666],[554,620],[587,595],[614,558]],[[317,548],[347,531],[455,496],[543,456],[578,430],[602,395]]],
+    totalLengths: 2736.991026413281,
+    svg: samplesvg,
+}
+
   // const character: Character = characterParser(charData);
 
   return (
@@ -96,6 +135,8 @@ const Home: React.FC = (props) => {
       <h2 className="home-greeting">
         Hello, {user?.displayName}
       </h2>
+
+      <DrawSandbox allowDisplay={true} recall={false} character={sample}/>
       {/* <HomeStats /> */}
       {(decks === null || decks === undefined || userData === null) ? <LoadingSpinner /> : <HomeStudyPrompt
         newUser={userData}

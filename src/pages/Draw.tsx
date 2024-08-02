@@ -12,7 +12,7 @@ import grade from "../grading/grade_controller";
 import '../styles/styles.css'
 import Character from "../types/Character";
 import KanjiGrade from "../types/KanjiGrade";
-import { interpretImage } from "../recogition/interpretImage";
+// import { interpretImage } from "../recogition/interpretImage";
 import type PredictionResult from "../recogition/predictionDisplay";
 import { AuthContext } from "../utils/FirebaseContext";
 import { upsertCharacterScoreData } from "../utils/FirebaseQueries";
@@ -498,30 +498,30 @@ const Draw: React.FC<DrawProps> = (props) => {
 
                     if (grade.overallGrade < 65 || grade.overallGrade === -1 || !grade.overallGrade) {
                       canvas.current.exportImage('jpeg').then((data: any) => {
-                        interpretImage(data).then(result => {
+                        // interpretImage(data).then(result => {
 
-                          setPrediction(result);
-                          if (kanji === result?.[0]?.label) return;
-
-
-                          if (grade.overallFeedback === "") {
-                            setKanjiGrade(prevState => ({
-                              ...prevState,
-                              overallFeedback: grade.overallFeedback + "Looks like you might have written the kanji " + result?.[0]?.label ?? "No feedback available"
-                            }));
-                          }
-                          else {
-                            setKanjiGrade(prevState => ({
-                              ...prevState,
-                              overallFeedback: grade.overallFeedback + "Did you draw " + result?.[0]?.label + " instead?" ?? "No feedback available"
-
-                            }));
-                          }
+                        //   setPrediction(result);
+                        //   if (kanji === result?.[0]?.label) return;
 
 
-                        }).catch(error => {
-                          console.error('Error interpreting image:', error);
-                        });
+                        //   if (grade.overallFeedback === "") {
+                        //     setKanjiGrade(prevState => ({
+                        //       ...prevState,
+                        //       overallFeedback: grade.overallFeedback + "Looks like you might have written the kanji " + result?.[0]?.label ?? "No feedback available"
+                        //     }));
+                        //   }
+                        //   else {
+                        //     setKanjiGrade(prevState => ({
+                        //       ...prevState,
+                        //       overallFeedback: grade.overallFeedback + "Did you draw " + result?.[0]?.label + " instead?" ?? "No feedback available"
+
+                        //     }));
+                        //   }
+
+
+                        // }).catch(error => {
+                        //   console.error('Error interpreting image:', error);
+                        // });
                       }).catch((e: any) => {
                         console.error(e);
                       });

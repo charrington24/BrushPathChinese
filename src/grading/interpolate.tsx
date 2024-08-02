@@ -3,12 +3,14 @@ import getTotalLengthAllPaths from "../coord-utils/getTotalLengthAllPaths";
 
 const parser = new DOMParser();
 
-export default function interpolate(inputSvg: string, targetLength: number): number[][][] {
+export function interpolate(inputSvg: string, targetLength: number): number[][][] {
+
     var doc = parser.parseFromString(inputSvg, "image/svg+xml");
     const baseLength = getTotalLengthAllPaths(doc.getElementsByTagName("path"));
     
     const svg = doc.getElementsByTagName("svg")[0];
     const scale = targetLength / baseLength;
+
 
     var paths = svg.getElementsByTagName("path");
     var coords: number[][][] = [];
@@ -21,5 +23,36 @@ export default function interpolate(inputSvg: string, targetLength: number): num
             0
         );
     }
-    return coords;
+    return structuredClone(coords);
 }
+
+type interpData = {
+    coords : number[][][],
+    totalLen : number,
+}
+
+export function interpolateStatic(inputSvg: string): interpData {
+    var doc = parser.parseFromString(inputSvg, "image/svg+xml");
+    const baseLength = getTotalLengthAllPaths(doc.getElementsByTagName("path"));
+    
+    const svg = doc.getElementsByTagName("svg")[0];
+  
+
+    var paths = svg.getElementsByTagName("path");
+    var coords: number[][][] = [];
+    for (var i = 0; i < paths.length; i++) {
+        coords[i] = pathsToCoords(
+            [paths[i]],
+            1,
+            paths[i].getTotalLength(),
+            0,
+            0
+        );
+    }
+    var data = {
+        coords: coords, totalLen : baseLength
+    }
+    return data;
+}
+
+export default {interpolate, interpolateStatic}

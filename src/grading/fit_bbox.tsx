@@ -11,6 +11,7 @@ export default function fit_bbox(inputCoords: number[][][], targetCoords: number
       targetCoords[0][0][0], 
       targetCoords[0][0][1]
     ];
+
     var i, j, k;
     for (i = 0; i < inputCoords.length; i++) {
       for (j = 0; j < inputCoords[i].length; j++) {
@@ -24,6 +25,7 @@ export default function fit_bbox(inputCoords: number[][][], targetCoords: number
         }
       }
     }
+
     for (i = 0; i < targetCoords.length; i++) {
       for (j = 0; j < targetCoords[i].length; j++) {
         for (k = 0; k < targetCoords[i][j].length; k++) {
@@ -36,6 +38,7 @@ export default function fit_bbox(inputCoords: number[][][], targetCoords: number
         }
       }
     }
+
     const targetWidth = targetBbox[2] - targetBbox[0];
     const targetHeight = targetBbox[3] - targetBbox[1];
     const inputWidth = inputBbox[2] - inputBbox[0];
@@ -52,6 +55,7 @@ export default function fit_bbox(inputCoords: number[][][], targetCoords: number
         }
       }
     }
+
     for (i = 0; i < targetCoords.length; i++) {
       for (j = 0; j < targetCoords[i].length; j++) {
         for (k = 0; k < targetCoords[i][j].length; k++) {

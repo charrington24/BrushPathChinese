@@ -63,6 +63,44 @@ export const getDecksFromRefs = async (deckRefs: DocumentReference[]) => {
   }
 };
 
+export const updateLanguageField = async () => {
+    try {
+      const characterQuery = query(collection(db, "Character"));
+      const characterResult = await getDocs(characterQuery)
+
+      if (!characterResult.empty) {
+        characterResult.forEach(async (doc) => {
+          const data = doc.data();
+          // console.log(data);
+          // console.log("updateRepData", repData);
+  
+          await setDoc(doc.ref, { language: 'jp'  }, { merge: true });
+          // console.log("CharacterScore document updated:", doc.id);
+        });
+      } else {
+        
+      }
+  
+    } catch (error) {
+      console.error("Error upserting CharacterScore:", error);
+      throw error;
+    }
+
+      // const batch = firestore.batch();
+
+      // querySnapshot.docs.forEach((doc) => {
+      //   const docRef = charactersCollection.doc(doc.id);
+      //   batch.update(docRef, { language: 'jp' });
+      // });
+
+      // await batch.commit();
+    //   console.log('Successfully updated the language field for the first 5 documents.');
+    // } catch (error) {
+    //   console.error('Error updating documents: ', error);
+    // }
+  };
+
+
 
 // pagination info from google cloud
 

@@ -187,7 +187,11 @@ function gen_feedback_crosses(extraCrosses: number[], missingCrosses: number[]):
 }
 
 export default function grade_svg(iCoords: number[][][], tCoords: number[][][], passing: number = 0.6): [number[], string[], string[], string]{
-    const [inputCoords, targetCoords, aspectWarp] = fit_bbox(iCoords, tCoords);
+    
+
+    const [inputCoords, targetCoords, aspectWarp] = fit_bbox(structuredClone(iCoords), tCoords);
+
+
     const grades: number[] = [];
     const strokeInfo: string[] = [];
     const feedback: string[] = [];

@@ -178,6 +178,7 @@ const Feedback: React.FC<feedbackProps> = (props) => {
     });
     // setHaveGradeInfo(hasInfo);
     setShowDots(hasInfo);
+    console.log(kanji_grade)
   }, [kanji_grade.grades]);
 
   return (
