@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import math
 import svgpathtools
 from svgpathtools import svg2paths
+from svgpathtools import parse_path
 
 def get_total_length_all_paths(paths):
     return sum(path_length(path) for path in paths)
@@ -121,5 +122,13 @@ if __name__ == "__main__":
     <text x="317" y="548" style="transform-origin:317px 548px; transform:scale(1,-1);">2</text></g>
 </svg>'''
 
-    result = interpolate_static(input_svg)
-    print(result)
+    # result = interpolate_static(input_svg)
+    # print(result)
+
+
+path = parse_path("M 336 704 L 450 666 L 554 620 L 587 595 L 614 558")
+path2 = parse_path("M 317 548 L 347 531 L 455 496 L 543 456 L 578 430 L 602 395")
+
+
+print(path.reversed().d())
+print(path2.reversed().d())

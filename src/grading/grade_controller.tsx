@@ -20,7 +20,13 @@ var kanji_grade: KanjiGrade = {
 }
 
 function order_feedback(order: number[]) {
+    console.log("order:")
+    console.log(order)
     const default_order = Array.from({ length: order.length }, (_, index) => index + 1);
+    console.log("default order:")
+
+    console.log(default_order)
+
     if (order.toString() === default_order.toString()) {
         return;
     }
@@ -309,6 +315,7 @@ export default function grade(input: string, targetKanji: string, passing: numbe
                     [grades, strokeInfo, feedback, aspectString, failing, strokeOrder] = alternateStrokeOrder(structuredClone(iCoords), tCoords, passing);
                     if (failing > iCoords.length * 0.75) {
                         color_input([]);
+                        console.log("line 318")
                         kanji_grade = {
                             overallGrade: 0,
                             overallFeedback: "Review the model and try again.\n",
@@ -371,6 +378,8 @@ export default function grade(input: string, targetKanji: string, passing: numbe
                         [grades, strokeInfo, feedback, aspectString, failing, strokeOrder] = alternateStrokeOrder(iCoords, tCoords, passing);
                         if (failing > iCoords.length * 0.75) {
                             color_input([]);
+                            console.log("line 381")
+
                             kanji_grade = {
                                 overallGrade: 0,
                                 overallFeedback: "Review the model and try again.\n",

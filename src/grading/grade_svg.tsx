@@ -227,6 +227,8 @@ export default function grade_svg(iCoords: number[][][], tCoords: number[][][], 
             if (intersectionScore) feedbackline += gen_feedback_intersections(extraIntersections[i].filter(num => num > 0), missingIntersections[i].filter(num => num > 0));
             if (crossScore) feedbackline += gen_feedback_crosses(extraCrosses[i], missingCrosses[i]);
             feedback[i] = feedbackline;
+        console.log(feedbackline)
+
         } else {
             feedback[i] = "Stroke " + (i + 1) + " is good. Score = " + Math.round(grades[i] * 100) + "%\n";
         }

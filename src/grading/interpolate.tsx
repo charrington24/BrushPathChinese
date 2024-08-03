@@ -3,18 +3,20 @@ import getTotalLengthAllPaths from "../coord-utils/getTotalLengthAllPaths";
 
 const parser = new DOMParser();
 
-export function interpolate(inputSvg: string, targetLength: number): number[][][] {
+export function interpolate(inputSvg: string, targetLength?: number): number[][][] {
 
     var doc = parser.parseFromString(inputSvg, "image/svg+xml");
     const baseLength = getTotalLengthAllPaths(doc.getElementsByTagName("path"));
+    console.log(baseLength)
     
     const svg = doc.getElementsByTagName("svg")[0];
-    const scale = targetLength / baseLength;
-
+    const scale =  targetLength ? targetLength / baseLength : 1;
 
     var paths = svg.getElementsByTagName("path");
     var coords: number[][][] = [];
     for (var i = 0; i < paths.length; i++) {
+        // console.log(Math.floor(paths[i].getTotalLength() * scale / 10))
+
         coords[i] = pathsToCoords(
             [paths[i]],
             1,

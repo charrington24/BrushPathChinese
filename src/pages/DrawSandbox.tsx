@@ -26,6 +26,7 @@ import { upsertCharacterScoreData } from "../utils/FirebaseQueries";
 import Feedback from "../grading/Feedback";
 import gradeToColor from "../utils/gradeToColor";
 import { DocumentData } from "@firebase/firestore";
+import { interpolate } from "../grading/interpolate";
 
 const passing = 0.65;
 
@@ -73,22 +74,55 @@ const samplesvg =  `<svg version="1.1" viewBox="0 0 1024 1024" xmlns="http://www
   <line x1="0" y1="128" x2="256" y2="128"/>
 </g>
 <g transform="scale(1, -1) translate(0, -900)">
+  <style type="text/css">
+      .stroke1 {fill: #BF0909;}
+      .stroke2 {fill: #BFBF09;}
+      .stroke3 {fill: #09BF09;}
+      .stroke4 {fill: #09BFBF;}
+      .stroke5 {fill: #0909BF;}
+      .stroke6 {fill: #BF09BF;}
+      .stroke7 {fill: #42005e;}
+      .stroke8 {fill: #ff3333;}
+      .stroke9 {fill: #BFBFBF;}
+      .stroke10 {fill: #00a53f;}
+      .stroke11 {fill: #fff000;}
+      .stroke12 {fill: #6600a5;}
+      .stroke13 {fill: #0053a5;}
+      .stroke14 {fill: #62c22b;}
+      .stroke15 {fill: #BF09BF;}
+      .stroke16 {fill: #BF0909;}
+      .stroke17 {fill: #BFBF09;}
+      .stroke18 {fill: #09BF09;}
+      .stroke19 {fill: #09BFBF;}
+      .stroke20 {fill: #0909BF;}
+      text {
+          font-family: Helvetica;
+          font-size: 50px;
+          fill: #FFFFFF;
+          paint-order: stroke;
+          stroke: #000000;
+          stroke-width: 4px;
+          stroke-linecap: butt;
+          stroke-linejoin: miter;
+          font-weight: 800;
+      }
+  </style>
 
-  <path d="M 323 706 Q 325 699 328 694 Q 334 686 367 671 Q 474 619 574 561 Q 600 545 617 543 Q 627 545 631 559 Q 641 576 613 621 Q 575 684 334 717 Q 321 719 323 706 Z" class="stroke1"/>
-  <path d="M 312 541 Q 314 535 316 531 Q 320 524 347 512 Q 455 461 563 397 Q 588 380 606 380 Q 615 382 619 396 Q 629 414 602 457 Q 564 519 321 554 Q 320 555 319 555 Q 310 555 312 541 Z" class="stroke2"/>
-  <text x="336" y="704" style="transform-origin:336px 704px; transform:scale(1,-1);">1</text>
-  <text x="317" y="548" style="transform-origin:317px 548px; transform:scale(1,-1);">2</text></g>
+  <path d="M 531 651 Q 736 675 868 663 Q 893 662 899 670 Q 906 683 894 696 Q 863 724 817 744 Q 801 750 775 740 Q 712 725 483 694 Q 185 660 168 657 Q 162 658 156 657 Q 141 657 141 645 Q 140 632 160 618 Q 178 605 211 594 Q 221 590 240 599 Q 348 629 470 644 L 531 651 Z" class="stroke1"/>
+  <path d="M 435 100 Q 407 107 373 116 Q 360 120 361 112 Q 361 103 373 94 Q 445 39 491 -5 Q 503 -15 518 2 Q 560 60 553 141 Q 541 447 548 561 Q 548 579 550 596 Q 556 624 549 635 Q 545 642 531 651 C 509 671 457 671 470 644 Q 485 629 485 573 Q 488 443 488 148 Q 487 112 477 99 Q 464 92 435 100 Z" class="stroke2"/>
+  <text x="153" y="645" style="transform-origin:153px 645px; transform:scale(1,-1);">1</text>
+  <text x="478" y="644" style="transform-origin:478px 644px; transform:scale(1,-1);">2</text></g>
 </svg>`
 
 const sample : Character = {
     id: '0',
-    unicode: "⺀",
-    unicode_str: "⺀",
+    unicode: "丁",
+    unicode_str: "丁",
     on: [],
     kun: [],
     nanori: [],
     radicals: [],
-    english: ["ice"],
+    english: ["male adult"],
     one_word_meaning: "",
     stroke_count: 2,
     freq: null,
@@ -96,8 +130,8 @@ const sample : Character = {
     jlpt: null,
     compounds: undefined,
     parts: [],
-    coords: [[[336,704],[450,666],[554,620],[587,595],[614,558]],[[317,548],[347,531],[455,496],[543,456],[578,430],[602,395]]],
-    totalLengths: 2736.991026413281,
+    coords: [[[153,645],[177,634],[219,628],[416,663],[794,706],[823,702],[887,679]],[[478,644],[518,610],[518,101],[495,55],[450,68],[369,110]]],
+    totalLengths: 1597.4033034269157,
     svg: samplesvg,
 }
 
@@ -210,6 +244,7 @@ const Draw: React.FC<DrawProps> = (props) => {
     if (props.character) {
       setKanji(props.character.unicode);
       setAskInput(false);
+
     }
   });
 
@@ -224,6 +259,9 @@ const Draw: React.FC<DrawProps> = (props) => {
           const svgModule = await fetch("/joyo_kanji/" + unicode + ".svg");
           svgText = await svgModule.text();
         }
+        // console.log(svgText)
+        console.log(interpolate(svgText))
+
         var doc = parser.parseFromString(svgText, "image/svg+xml");
         const svg = doc.getElementsByTagName("svg")[0];
         svg.setAttribute("width", "100%");
