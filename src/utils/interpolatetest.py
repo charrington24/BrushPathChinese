@@ -19,10 +19,11 @@ def range_func(start, stop=None, step=1):
 
 def polygonize(path, num_points, scale, translate_x, translate_y):
     length = path_length(path)
+    print(path.point(length * 1 / num_points))
     return [
         [
-            path.point(length * i / num_points)[0] * scale + translate_x,
-            path.point(length * i / num_points)[1] * scale + translate_y
+            path.point(math.floor(length * i / num_points)).real * scale + translate_x,
+            path.point(math.floor(length * i / num_points)).imag * scale + translate_y
         ]
         for i in range_func(num_points)
     ]
@@ -122,13 +123,13 @@ if __name__ == "__main__":
     <text x="317" y="548" style="transform-origin:317px 548px; transform:scale(1,-1);">2</text></g>
 </svg>'''
 
-    # result = interpolate_static(input_svg)
-    # print(result)
+    result = interpolate_static(input_svg)
+    print(result)
 
 
-path = parse_path("M 336 704 L 450 666 L 554 620 L 587 595 L 614 558")
-path2 = parse_path("M 317 548 L 347 531 L 455 496 L 543 456 L 578 430 L 602 395")
+# path = parse_path("M 336 704 L 450 666 L 554 620 L 587 595 L 614 558")
+# path2 = parse_path("M 317 548 L 347 531 L 455 496 L 543 456 L 578 430 L 602 395")
 
 
-print(path.reversed().d())
-print(path2.reversed().d())
+# print(path.reversed().d())
+# print(path2.reversed().d())
